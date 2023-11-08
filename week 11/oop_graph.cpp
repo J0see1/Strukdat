@@ -1,44 +1,9 @@
 #include <iostream>
 #include <list>
-// #include <graphics.h>
 using namespace std;
 
 struct nodeName {
     string name;
-};
-
-class Titik {
-private:
-    int id;
-    string nama;
-    int x;
-    int y;
-
-public:
-    Titik() {}
-
-    Titik(int id, string nama, int x, int y) {
-        this->id = id;
-        this->nama = nama;
-        this->x = x;
-        this->y = y;
-    }
-
-    int getID() {
-        return id;
-    }
-
-    string getNama() {
-        return nama;
-    }
-
-    int getX() {
-        return x;
-    }
-
-    int getY() {
-        return y;
-    }
 };
 
 class Map {
@@ -47,10 +12,9 @@ private:
     list<int> *adjList;
     int **adjMatrix;
     nodeName *nodeInfo;
-    Titik *titikInfo;
 
 public:
-    Map(int node, nodeName nodeInfo[], Titik titikInfo[]) {
+    Map(int node, nodeName nodeInfo[]) {
         this->node = node;
         this->adjListInit(node);
         this->adjMatrixInit(node);
@@ -58,16 +22,11 @@ public:
         for (int i = 0; i < node; i++) {
             this->nodeInfo[i] = nodeInfo[i];
         }
-        this->titikInfo = new Titik[node];
-        for (int i = 0; i < node; i++) {
-            this->titikInfo[i] = titikInfo[i];
-        }
     }
 
     ~Map() {
         delete[] adjList;
         delete[] nodeInfo;
-        delete[] titikInfo;
     }
 
     void adjListInit(int node) {
@@ -94,9 +53,9 @@ public:
         list<int>::iterator i;
 
         for (int v = 0; v < node; v++) {
-            cout << titikInfo[v].getNama() << " -> ";
+            cout << nodeInfo[v].name << " -> ";
             for (i = adjList[v].begin(); i != adjList[v].end(); ++i) {
-                cout << titikInfo[*i].getNama();
+                cout << nodeInfo[*i].name;
                 if (next(i, 1) != adjList[v].end()) {
                     cout << " -> ";
                 }
@@ -113,34 +72,7 @@ public:
             cout << endl;
         }
     }
-
-    list<int>* getAdjList() {
-        return adjList;
-    }
-
-    int getNode() {
-        return node;
-    }
 };
-
-// void drawGraph(Titik titikInfo[], Map myMap) {
-//     int gd = DETECT, gm;
-//     initgraph(&gd, &gm, NULL);
-
-//     for (int i = 0; i < myMap.getNode(); i++) {
-//         circle(titikInfo[i].getX(), titikInfo[i].getY(), 5);
-//         outtextxy(titikInfo[i].getX() + 10, titikInfo[i].getY(), titikInfo[i].getNama().c_str());
-//     }
-
-//     for (int i = 0; i < myMap.getNode(); i++) {
-//         for (int tujuan : myMap.getAdjList()[i]) {
-//             line(titikInfo[i].getX(), titikInfo[i].getY(), titikInfo[tujuan].getX(), titikInfo[tujuan].getY());
-//         }
-//     }
-
-//     delay(5000);
-//     closegraph();
-// }
 
 int main() {
     cout << "Peta Rumah" << endl;
@@ -158,20 +90,7 @@ int main() {
         {"maospati"}
     };
 
-    Titik titikInfo[] = {
-        Titik(0, "Rumah", 100, 100),
-        Titik(1, "SMA_2", 200, 100),
-        Titik(2, "Stadion", 300, 100),
-        Titik(3, "Toko", 100, 200),
-        Titik(4, "Stasiun", 200, 200),
-        Titik(5, "Gereja", 300, 200),
-        Titik(6, "Alun Alun", 100, 300),
-        Titik(7, "Terminal", 200, 300),
-        Titik(8, "Lapangan Gulun", 300, 300),
-        Titik(9, "Maospati", 400, 300)
-    };
-
-    Map myMap(node, nodeInfo, titikInfo);
+    Map myMap(node, nodeInfo);
 
     myMap.addRoute(0, 1);
     myMap.addRoute(0, 2);
@@ -191,8 +110,6 @@ int main() {
     cout << endl;
     cout << "Adjacency Matrix" << endl;
     myMap.showAdjMatrix();
-
-    // drawGraph(titikInfo, myMap);
 
     return 0;
 }
